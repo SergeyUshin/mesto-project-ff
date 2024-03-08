@@ -9,11 +9,11 @@
 // @todo: Вывести карточки на страницу
 
 import "./pages/index.css";
-import { appCards } from "./scripts/cards.js";
+import { appCards } from "./scripts/card.js";
 import { openPopup } from "./scripts/modal.js";
 import { closePopup } from "./scripts/modal.js";
 import { addPopup } from "./scripts/modal.js";
-import { addCardFromForm } from "./scripts/cards.js";
+import { addCardFromForm } from "./scripts/card.js";
 
 const profelOpen = document.querySelector(".profile__edit-button");
 const profelPopup = document.querySelector(".popup_type_edit");
@@ -47,11 +47,12 @@ function createInfoProfel(evt) {
   closePopup(profelPopup);
 }
 function addPopupProfel() {
-nameInput.value = title.textContent;
-descriptionInput.value = description.textContent;
-profelPopup.addEventListener("submit", createInfoProfel);}
+  nameInput.value = title.textContent;
+  descriptionInput.value = description.textContent;
+  profelPopup.addEventListener("submit", createInfoProfel);
+}
 
-addPopupProfel()
+addPopupProfel();
 
 newCardPopup.addEventListener("submit", addCardFromForm);
 
