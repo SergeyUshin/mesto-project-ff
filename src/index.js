@@ -7,22 +7,20 @@ import { initialCards } from "./scripts/cards.js";
 import { createCardElement } from "./scripts/card.js";
 import { closeOverlau } from "./scripts/modal.js";
 
-const profelOpenList = document.querySelector(".profile__edit-button");
-const newCardOpenList = document.querySelector(".profile__add-button");
-const closedModalList = document.querySelectorAll(".popup__close");
-const imgOpenList = document.querySelector(".popup_type_image");
-const popupImgList = imgOpenList.querySelector(".popup__image");
-const popupCaptionList = imgOpenList.querySelector(".popup__caption");
-const newCardPopupList = document.querySelector(".popup_type_new-card");
-const newCardNameList = newCardPopupList.querySelector(
-  ".popup__input_type_card-name"
-);
-const newCardUrlList = newCardPopupList.querySelector(".popup__input_type_url");
-const cardsSelectorList = document.querySelector(".places__list");
-const popupList = document.querySelectorAll(".popup");
-const profelPopupList = document.querySelector(".popup_type_edit");
-const nameInputList = profelPopupList.querySelector(".popup__input_type_name");
-const descriptionInputList = profelPopupList.querySelector(
+const profelOpen = document.querySelector(".profile__edit-button");
+const newCardOpen = document.querySelector(".profile__add-button");
+const buttonClosedModal = document.querySelectorAll(".popup__close");
+const imgOpen = document.querySelector(".popup_type_image");
+const popupImg = imgOpen.querySelector(".popup__image");
+const popupCaption = imgOpen.querySelector(".popup__caption");
+const newCardPopup = document.querySelector(".popup_type_new-card");
+const newCardName = newCardPopup.querySelector(".popup__input_type_card-name");
+const newCardUrl = newCardPopup.querySelector(".popup__input_type_url");
+const cardsSelector = document.querySelector(".places__list");
+const popup = document.querySelectorAll(".popup");
+const profelPopup = document.querySelector(".popup_type_edit");
+const nameInput = profelPopup.querySelector(".popup__input_type_name");
+const descriptionInput = profelPopup.querySelector(
   ".popup__input_type_description"
 );
 const titleList = document.querySelector(".profile__title");
@@ -36,15 +34,15 @@ function appCards() {
       addLike,
       addPopoupImg
     );
-    cardsSelectorList.append(newCard);
+    cardsSelector.append(newCard);
   });
 }
 
 function addCardFromForm(evt) {
   evt.preventDefault();
 
-  const cardName = newCardNameList.value;
-  const cardLink = newCardUrlList.value;
+  const cardName = newCardName.value;
+  const cardLink = newCardUrl.value;
 
   const newCardData = {
     name: cardName,
@@ -57,58 +55,58 @@ function addCardFromForm(evt) {
     addLike,
     addPopoupImg
   );
-  cardsSelectorList.prepend(newCardElement);
+  cardsSelector.prepend(newCardElement);
 
-  closePopup(newCardPopupList);
-
-  newCardNameList.value = "";
-  newCardUrlList.value = "";
+  closePopup(newCardPopup);
 }
 
 appCards();
-addPopup(profelPopupList, profelOpenList);
-addPopup(newCardPopupList, newCardOpenList);
 
-closedModalList.forEach(function (button) {
+buttonClosedModal.forEach(function (button) {
   const popupClos = button.closest(".popup");
   button.addEventListener("click", function () {
     closePopup(popupClos);
   });
 });
 
-popupList.forEach(function (over) {
+popup.forEach(function (over) {
   over.addEventListener("mousedown", closeOverlau);
 });
 
-function addPopup(name, btn) {
-  nameInputList.value = titleList.textContent;
-  descriptionInputList.value = descriptionList.textContent;
+function addPopupProfel() {
+  nameInput.value = titleList.textContent;
+  descriptionInput.value = descriptionList.textContent;
 
-  btn.addEventListener("click", function () {
-    openPopup(name);
-  });
+  openPopup(profelPopup);
 }
+
+function addPopupNewCard() {
+  newCardName.value = "";
+  newCardUrl.value = "";
+
+  openPopup(newCardPopup);
+}
+
+newCardOpen.addEventListener("click", addPopupNewCard);
+profelOpen.addEventListener("click", addPopupProfel);
 
 function createInfoProfel(evt) {
   evt.preventDefault();
 
-  titleList.textContent = nameInputList.value;
-  descriptionList.textContent = descriptionInputList.value;
+  titleList.textContent = nameInput.value;
+  descriptionList.textContent = descriptionInput.value;
 
-  closePopup(profelPopupList);
+  closePopup(profelPopup);
 }
 
-profelPopupList.addEventListener("submit", createInfoProfel);
+profelPopup.addEventListener("submit", createInfoProfel);
 
-newCardPopupList.addEventListener("submit", addCardFromForm);
+newCardPopup.addEventListener("submit", addCardFromForm);
 
 function addPopoupImg(data) {
-  const imageUrl = data.link;
-  const imageCaption = data.name;
+  popupImg.src = data.link;
+  popupImg.alt = data.name;
+  popupCaption.textContent = data.name;
 
-  popupImgList.src = imageUrl;
-  popupImgList.alt = imageCaption;
-  popupCaptionList.textContent = imageCaption;
-
-  openPopup(imgOpenList);
+  openPopup(imgOpen);
 }
