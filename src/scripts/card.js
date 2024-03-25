@@ -1,3 +1,4 @@
+// import { getInitialCards } from "./api.js"
 export function createCardElement(data, onDelete, onLike, onPopup) {
   const cardsTemplate = document.querySelector("#card-template").content;
   const cardsElement = cardsTemplate.querySelector(".card").cloneNode(true);

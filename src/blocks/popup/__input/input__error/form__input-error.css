@@ -1,0 +1,13 @@
+.form__input-error {
+    color: #ff0000;
+    margin-top: 5px;
+    display: none;
+}
+
+.popup__input-error {
+    border-bottom: 1px solid #ff0000;
+  }
+
+  .form__input-error_active {
+    display: block;
+  }
