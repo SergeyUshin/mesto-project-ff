@@ -3,6 +3,7 @@ import { getInitialCards } from "./scripts/api.js";
 import { userList } from "./scripts/api.js";
 import { user } from "./scripts/api.js";
 import { addNewCard } from "./scripts/api.js";
+import { addNewAvatar } from "./scripts/api.js";
 import { openPopup } from "./scripts/modal.js";
 import { closePopup } from "./scripts/modal.js";
 import { addLike } from "./scripts/card.js";
@@ -31,6 +32,12 @@ const descriptionInput = profelPopup.querySelector(
 );
 const titleList = document.querySelector(".profile__title");
 const descriptionList = document.querySelector(".profile__description");
+const newAvatarOpen = document.querySelector(".profile__image");
+const popupNewAvatar = document.querySelector(".popup_new_avatar");
+const popupNewAvatarUrl = popupNewAvatar.querySelector(
+  ".popup__input_new-avatar"
+);
+const popupBtn = document.querySelectorAll(".popup__button");
 
 function appDataServer() {
   Promise.all([getInitialCards(), userList()])
@@ -44,24 +51,23 @@ function appDataServer() {
         );
 
         if (cardData.likes.some((like) => like._id === users._id)) {
-          const likeButton = newCard.querySelector('.card__like-button');
+          const likeButton = newCard.querySelector(".card__like-button");
           if (likeButton) {
-            likeButton.classList.add('card__like-button_is-active');
+            likeButton.classList.add("card__like-button_is-active");
           }
         }
 
         if (cardData.owner._id === users._id) {
-          const deleteButton = newCard.querySelector('.card__delete-button');
+          const deleteButton = newCard.querySelector(".card__delete-button");
           if (deleteButton) {
-            deleteButton.classList.add('card__delete-button_activ');
+            deleteButton.classList.add("card__delete-button_activ");
           }
         }
 
         cardsSelector.append(newCard);
       });
 
-
-      
+      newAvatarOpen.style.backgroundImage = `url(${users.avatar})`;
       titleList.textContent = users.name;
       descriptionList.textContent = users.about;
     })
@@ -80,6 +86,7 @@ function addCardFromForm(evt) {
     name: cardName,
     link: cardLink,
   };
+  renderLoading(true);
   addNewCard(newCardData)
     .then((data) => {
       const newCardElement = createCardElement(
@@ -88,13 +95,23 @@ function addCardFromForm(evt) {
         addLike,
         addPopoupImg
       );
+
+      const deleteButton = newCardElement.querySelector(".card__delete-button");
+      if (deleteButton) {
+        deleteButton.classList.add("card__delete-button_activ");
+      }
+
       cardsSelector.prepend(newCardElement);
 
       closePopup(newCardPopup);
     })
-    
+
     .catch((error) => {
       console.error(error);
+    })
+
+    .finally(() => {
+      renderLoading(false);
     });
 }
 
@@ -129,6 +146,15 @@ function addPopupNewCard() {
   openPopup(newCardPopup);
 }
 
+function addPopupNewAvatar() {
+  popupNewAvatarUrl.value = "";
+
+  clearValidation(popupNewAvatar, configSeting);
+
+  openPopup(popupNewAvatar);
+}
+
+newAvatarOpen.addEventListener("click", addPopupNewAvatar);
 newCardOpen.addEventListener("click", addPopupNewCard);
 profelOpen.addEventListener("click", addPopupProfel);
 
@@ -142,6 +168,7 @@ function createInfoProfel(evt) {
     about: about,
   };
 
+  renderLoading(true);
   user(userData)
     .then((data) => {
       titleList.textContent = data.name;
@@ -150,9 +177,33 @@ function createInfoProfel(evt) {
     })
     .catch((error) => {
       console.error(error);
+    })
+    .finally(() => {
+      renderLoading(false);
     });
   closePopup(profelPopup);
 }
+
+function addAvatar(evt) {
+  evt.preventDefault();
+
+  const avatarLink = popupNewAvatarUrl.value;
+
+  renderLoading(true);
+  addNewAvatar({ avatar: avatarLink })
+    .then((data) => {
+      newAvatarOpen.style.backgroundImage = `url(${data.avatar})`;
+      closePopup(popupNewAvatar);
+    })
+    .catch((error) => {
+      console.error("Произошла ошибка при обновлении аватара:", error);
+    })
+    .finally(() => {
+      renderLoading(false);
+    });
+}
+
+popupNewAvatar.addEventListener("submit", addAvatar);
 
 profelPopup.addEventListener("submit", createInfoProfel);
 
@@ -167,3 +218,15 @@ function addPopoupImg(data) {
 }
 
 enableValidation(configSeting);
+
+function renderLoading(isLoading) {
+  if (isLoading) {
+    popupBtn.forEach((res) => {
+      res.textContent = "Сохранение...";
+    });
+  } else {
+    popupBtn.forEach((res) => {
+      res.textContent = "Сохранить";
+    });
+  }
+}

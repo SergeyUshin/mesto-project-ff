@@ -14,7 +14,9 @@
   </header>
   <main class="content">
     <section class="profile page__section">
-      <div class="profile__image" style="background-image: url(<%=require('./images/avatar.jpg')%>)"></div>
+      <div class="profile__image">
+        <img src="<%=require('./images/Vector.svg')%>" alt="иконка редактирования" class="profile__image_icon">
+      </div>
       <div class="profile__info">
         <h1 class="profile__title"></h1>
         <button class="profile__edit-button" type="button"></button>
@@ -65,6 +67,17 @@
       <p class="popup__caption"></p>
     </div>
   </div>
+</div>
+<div class="popup popup_new_avatar popup_is-animated">
+<div class="popup__content">
+<button type="button" class="popup__close"></button>
+<h3 class="popup__title">Обновить аватар</h3>
+<form class="popup__form" name="new-avatar" novalidate>
+  <input type="url" name="link" id="new-card-url" class="popup__input popup__input_new-avatar" placeholder="Ссылка на аватар" required>
+  <span class="new-card-url-error form__input-error"></span>
+  <button type="submit" class="button popup__button">Сохранить</button>
+</form>
+</div>
 </div>
 
 <template id="card-template">
