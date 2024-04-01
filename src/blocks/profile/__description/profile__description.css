@@ -1,6 +1,9 @@
 .profile__description {
   font-size: 18px;
   line-height: 22px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
   grid-area: description;
   margin: 0;
 }
