@@ -1,10 +1,12 @@
 import "./pages/index.css";
-import { getInitialCards } from "./scripts/api.js"
+import { getInitialCards } from "./scripts/api.js";
+import { userList } from "./scripts/api.js";
+import { user } from "./scripts/api.js";
+import { addNewCard } from "./scripts/api.js";
 import { openPopup } from "./scripts/modal.js";
 import { closePopup } from "./scripts/modal.js";
 import { addLike } from "./scripts/card.js";
 import { deleteCard } from "./scripts/card.js";
-// import { initialCards } from "./scripts/cards.js";
 import { createCardElement } from "./scripts/card.js";
 import { closeOverlau } from "./scripts/modal.js";
 import { configSeting } from "./scripts/validation.js";
@@ -30,34 +32,41 @@ const descriptionInput = profelPopup.querySelector(
 const titleList = document.querySelector(".profile__title");
 const descriptionList = document.querySelector(".profile__description");
 
-// function appCards() {
-//   initialCards.forEach(function (cardData) {
-//     const newCard = createCardElement(
-//       cardData,
-//       deleteCard,
-//       addLike,
-//       addPopoupImg
-//     );
-//     cardsSelector.append(newCard);
-//   });
-// }
-
-
-function appCards() {
-  getInitialCards()
-    .then((cards) => {
-      cards.forEach(function (cardData) {
+function appDataServer() {
+  Promise.all([getInitialCards(), userList()])
+    .then(([cards, users]) => {
+      cards.forEach((cardData) => {
         const newCard = createCardElement(
           cardData,
           deleteCard,
           addLike,
           addPopoupImg
         );
+
+        if (cardData.likes.some((like) => like._id === users._id)) {
+          const likeButton = newCard.querySelector('.card__like-button');
+          if (likeButton) {
+            likeButton.classList.add('card__like-button_is-active');
+          }
+        }
+
+        if (cardData.owner._id === users._id) {
+          const deleteButton = newCard.querySelector('.card__delete-button');
+          if (deleteButton) {
+            deleteButton.classList.add('card__delete-button_activ');
+          }
+        }
+
         cardsSelector.append(newCard);
       });
+
+
+      
+      titleList.textContent = users.name;
+      descriptionList.textContent = users.about;
     })
     .catch((error) => {
-      console.error('Произошла ошибка при получении данных с сервера:', error);
+      console.log("Произошла ошибка при загрузке данных:", error);
     });
 }
 
@@ -71,19 +80,25 @@ function addCardFromForm(evt) {
     name: cardName,
     link: cardLink,
   };
+  addNewCard(newCardData)
+    .then((data) => {
+      const newCardElement = createCardElement(
+        data,
+        deleteCard,
+        addLike,
+        addPopoupImg
+      );
+      cardsSelector.prepend(newCardElement);
 
-  const newCardElement = createCardElement(
-    newCardData,
-    deleteCard,
-    addLike,
-    addPopoupImg
-  );
-  cardsSelector.prepend(newCardElement);
-
-  closePopup(newCardPopup);
+      closePopup(newCardPopup);
+    })
+    
+    .catch((error) => {
+      console.error(error);
+    });
 }
 
-appCards();
+appDataServer();
 
 ClosedModalList.forEach(function (button) {
   const popupClos = button.closest(".popup");
@@ -119,10 +134,23 @@ profelOpen.addEventListener("click", addPopupProfel);
 
 function createInfoProfel(evt) {
   evt.preventDefault();
+  const name = nameInput.value;
+  const about = descriptionInput.value;
 
-  titleList.textContent = nameInput.value;
-  descriptionList.textContent = descriptionInput.value;
+  const userData = {
+    name: name,
+    about: about,
+  };
 
+  user(userData)
+    .then((data) => {
+      titleList.textContent = data.name;
+      descriptionList.textContent = data.about;
+      closePopup(profelPopup);
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   closePopup(profelPopup);
 }
 
