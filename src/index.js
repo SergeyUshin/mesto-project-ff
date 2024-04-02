@@ -10,6 +10,7 @@ import { addLike } from "./scripts/card.js";
 import { deleteCard } from "./scripts/card.js";
 import { createCardElement } from "./scripts/card.js";
 import { addBtnDelete } from "./scripts/card.js";
+import { addCounterLike } from "./scripts/card.js";
 import { closeOverlau } from "./scripts/modal.js";
 import { configSeting } from "./scripts/validation.js";
 import { enableValidation } from "./scripts/validation.js";
@@ -56,12 +57,7 @@ function downloadDataServer() {
       newAvatarOpen.style.backgroundImage = `url(${users.avatar})`;
       titleList.textContent = users.name;
       descriptionList.textContent = users.about;
-          data.forEach((card, i) => {
-      const counter = document.querySelectorAll(".counter")[i];
-      if (counter) {
-        counter.textContent = card.likes.length;
-      }
-    });
+      addCounterLike(cards);
     })
     .catch((error) => {
       console.log("Произошла ошибка при загрузке данных:", error);
@@ -208,8 +204,8 @@ function addPopoupImg(data) {
 enableValidation(configSeting);
 
 function renderLoading(popup, isLoading) {
-const btnPopup = popup.querySelector('.popup__button')
-  
+  const btnPopup = popup.querySelector(".popup__button");
+
   if (isLoading) {
     btnPopup.textContent = "Сохранение...";
   } else {

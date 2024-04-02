@@ -10,17 +10,16 @@ function checkResponse(res) {
   return res.ok ? res.json() : Promise.reject(`Ошибка: ${res.status}`);
 }
 
-
 export const receiveDataUser = () => {
   return fetch(`${config.baseUrl}/users/me`, {
     headers: config.headers,
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const getInitialCards = () => {
   return fetch(`${config.baseUrl}/cards`, {
     headers: config.headers,
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const replaceDataUser = (userData) => {
@@ -28,7 +27,7 @@ export const replaceDataUser = (userData) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(userData),
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const addNewCard = (cardData) => {
@@ -36,28 +35,28 @@ export const addNewCard = (cardData) => {
     method: "POST",
     headers: config.headers,
     body: JSON.stringify(cardData),
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const removeCard = (cardId) => {
   return fetch(`${config.baseUrl}/cards/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const addlikes = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "PUT",
     headers: config.headers,
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const deletelikes = (cardId) => {
   return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
     method: "DELETE",
     headers: config.headers,
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
 
 export const addNewAvatar = (data) => {
@@ -65,5 +64,5 @@ export const addNewAvatar = (data) => {
     method: "PATCH",
     headers: config.headers,
     body: JSON.stringify(data),
-  }).then((res) => checkResponse(res))
+  }).then((res) => checkResponse(res));
 };
