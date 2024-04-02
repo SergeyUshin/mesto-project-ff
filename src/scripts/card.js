@@ -3,7 +3,7 @@ import { removeCard } from "./api.js";
 import { addlikes } from "./api.js";
 import { deletelikes } from "./api.js";
 
-export function createCardElement(data, onDelete, onLike, onPopup) {
+export function createCardElement(data, onDelete, onLike, onPopup, userId) {
   const cardsTemplate = document.querySelector("#card-template").content;
   const cardsElement = cardsTemplate.querySelector(".card").cloneNode(true);
   const deleteButton = cardsElement.querySelector(".card__delete-button");
@@ -17,29 +17,30 @@ export function createCardElement(data, onDelete, onLike, onPopup) {
   cardImage.addEventListener("click", () => onPopup(data));
   btnLike.addEventListener("click", () => onLike(btnLike, data._id));
 
-  deleteButton.addEventListener("click", () =>
-    onDelete(cardsElement, data._id)
-  );
+  deleteButton.addEventListener("click", () => onDelete(cardsElement, data._id));
+
+  if (data.likes.some((like) => like._id === userId)) {
+    btnLike.classList.add("card__like-button_is-active");
+  }
+
+  if (data.owner._id === userId) {
+    deleteButton.classList.add("card__delete-button_activ");
+  }
 
   addCounterLike();
 
   return cardsElement;
 }
 
-function deleteCardFromServer(cardId) {
+export function deleteCard(cardElement, cardId) {
   removeCard(cardId)
-    .then((data) => {
+  .then((data) => {
+    cardElement.remove();
       console.log("Карточка успешно удалена с сервера:", data);
     })
     .catch((error) => {
       console.log("Произошла ошибка при удалении карточки с сервера:", error);
     });
-}
-
-export function deleteCard(cardElement, cardId) {
-  deleteCardFromServer(cardId);
-
-  cardElement.remove();
 }
 
 export function addLike(like, cardId) {
@@ -73,4 +74,11 @@ function addCounterLike() {
       }
     });
   });
+};
+
+export function addBtnDelete(data)  {
+        const deleteButton = data.querySelector(".card__delete-button");
+      if (deleteButton) {
+        deleteButton.classList.add("card__delete-button_activ");
+      }
 }
