@@ -87,6 +87,7 @@ function addCardFromForm(evt) {
       addBtnDelete(newCardElement);
 
       cardsSelector.prepend(newCardElement);
+  
 
       closePopup(newCardPopup);
     })

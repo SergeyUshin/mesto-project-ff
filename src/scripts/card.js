@@ -15,15 +15,15 @@ export function createCardElement(data, onDelete, onLike, onPopup, userId) {
 
   cardImage.addEventListener("click", () => onPopup(data));
   btnLike.addEventListener("click", () => onLike(btnLike, data._id));
-
+  
   deleteButton.addEventListener("click", () =>
-    onDelete(cardsElement, data._id)
+  onDelete(cardsElement, data._id)
   );
-
+  
   if (data.likes.some((like) => like._id === userId)) {
     btnLike.classList.add("card__like-button_is-active");
   }
-
+  
   if (data.owner._id === userId) {
     deleteButton.classList.add("card__delete-button_activ");
   }
